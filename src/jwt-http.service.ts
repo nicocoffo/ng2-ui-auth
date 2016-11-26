@@ -23,9 +23,10 @@ export class JwtHttp extends Http {
 
     request(url: string | Request, options?: JwtRequestOptionsArgs): Observable<Response> {
         //if the token is expired the "getExpirationDate" function returns null
-        if (this._shared.getToken() && !this._shared.getExpirationDate() &&
-            options.autoRefreshToken ||
-            typeof options.autoRefreshToken === 'undefined' && this._config.autoRefreshToken) {
+        if (this._shared.getToken() && !this._shared.getExpirationDate() && (
+            (options && options.autoRefreshToken) ||
+            ((!options || typeof options.autoRefreshToken === 'undefined') && 
+            this._config && this._config.autoRefreshToken))) {
             return this.refreshToken()
                 .switchMap(() => this.actualRequest(url, options));
         }
