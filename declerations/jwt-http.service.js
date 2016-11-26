@@ -27,9 +27,9 @@ var JwtHttp = (function (_super) {
     }
     JwtHttp.prototype.request = function (url, options) {
         var _this = this;
-        if (this._shared.getToken() && !this._shared.getExpirationDate() &&
-            options.autoRefreshToken ||
-            typeof options.autoRefreshToken === 'undefined' && this._config.autoRefreshToken) {
+        if (this._shared.getToken() && !this._shared.getExpirationDate() && ((options && options.autoRefreshToken) ||
+            ((!options || typeof options.autoRefreshToken === 'undefined') &&
+                this._config && this._config.autoRefreshToken))) {
             return this.refreshToken()
                 .switchMap(function () { return _this.actualRequest(url, options); });
         }
